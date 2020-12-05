@@ -14,12 +14,14 @@ SEEKER = pygame.image.load('mask.png').convert()
 GREY = pygame.Color(158,158,158)
 YELLOW = pygame.Color(255, 193, 7)
 BLACK = pygame.Color(0, 0, 0)
+LIGHT_YELLOW = pygame.Color(214, 217, 176)
 COLORS = {
   '0': BLACK,
   '1': GREY,
   '2': HIDER,
   '3': SEEKER,
   '4': YELLOW,
+  '5': LIGHT_YELLOW,
 }
 
 map = []
@@ -56,6 +58,7 @@ def setupGame(path):
   while RUNNING:
     #Seek run to...: Algorithm here....
     time.sleep(0.3)
+    
  #**********Test some move functions******Chay dung a mn*************   
   #  if(moveDown(Seek_xCoor, Seek_yCoor, 3)):
   #    Seek_yCoor+=1
@@ -64,17 +67,21 @@ def setupGame(path):
   #  if(moveDownLeft(Seek_xCoor, Seek_yCoor,3)):
   #    Seek_yCoor+=1
   #    Seek_xCoor-=1
-  #  if(moveDownRight(Seek_xCoor, Seek_yCoor, 3)):
-  #    Seek_yCoor+=1
-  #    Seek_xCoor+=1
+    if(moveDownRight(Seek_xCoor, Seek_yCoor, 3)):
+      Seek_yCoor+=1
+      Seek_xCoor+=1
   #  if(moveUpLeft(Seek_xCoor, Seek_yCoor, 3)):
   #    Seek_yCoor-=1
   #    Seek_xCoor-=1
   #  if(moveUpRight(Seek_xCoor, Seek_yCoor, 3)):
   #    Seek_yCoor-=1
   #    Seek_xCoor+=1
-    if(moveLeft(Seek_xCoor, Seek_yCoor, 3)):
-      Seek_xCoor-=1
+    
+  #  if(moveLeft(Seek_xCoor, Seek_yCoor, 3)):
+  #   Seek_xCoor-=1
+      
+    
+    
   #  if(moveRight(Seek_xCoor, Seek_yCoor, 3)):
   #    Seek_xCoor+=1
      
@@ -113,13 +120,15 @@ def drawMap(path):
       xCoor = 0
       count = 0
 def drawObjectAfterMove(curX, curY, nextX, nextY, typeOfAgent):
+  clearPreRange(curX, curY)
   if(typeOfAgent == 3):
     COLORS['3'].set_colorkey
     screen.blit(COLORS['3'], (nextX*24, nextY*24))
   if(typeOfAgent == 2):
     COLORS['2'].set_colorkey
     screen.blit(COLORS['2'], (nextX*24, nextY*24))
-  pygame.draw.rect(screen, COLORS['0'], [curX*24, curY*24, 24, 24]) #squareSize=24
+  drawRange(nextX, nextY)
+  #pygame.draw.rect(screen, COLORS['0'], [curX*24, curY*24, 24, 24]) #squareSize=24
   
 #*******************check able to move ******************************#
 def ableToMoveRight(coorX, coorY):
@@ -212,5 +221,48 @@ def moveUpLeft(coorX, coorY, typeOfAgent):
       drawObjectAfterMove(coorX, coorY, coorX-1,coorY-1,typeOfAgent)
       return True
   return False
+
+#*****************************draw range***************************#
+def drawRange(coorX,coorY):
+  if(ableToMoveDown(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [coorX*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUp(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [coorX*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX-1)*24, coorY*24, 24, 24])
+  if(ableToMoveRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX+1)*24, coorY*24, 24, 24])
+  
+  if(ableToMoveDownLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX-1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX-1)*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveDownRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX+1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['5'], [(coorX+1)*24, (coorY-1)*24, 24, 24])
+
+def clearPreRange(coorX, coorY):
+  if(ableToMoveDown(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [coorX*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUp(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [coorX*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX-1)*24, coorY*24, 24, 24])
+  if(ableToMoveRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX+1)*24, coorY*24, 24, 24])
+  
+  if(ableToMoveDownLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX-1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpLeft(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX-1)*24, (coorY-1)*24, 24, 24])
+  if(ableToMoveDownRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX+1)*24, (coorY+1)*24, 24, 24])
+  if(ableToMoveUpRight(coorX, coorY)):
+     pygame.draw.rect(screen, COLORS['0'], [(coorX+1)*24, (coorY-1)*24, 24, 24])
+
+
+
+     
 
 setupGame('map14.txt')
